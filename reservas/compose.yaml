@@ -1,0 +1,49 @@
+# Starter stack: app + auth + database only.
+# Apache, Tomcat, Gitea and the CI runner arrive in later units.
+# Set STUDENT_ID / BASE_DOMAIN / JWT_ISSUER in .env (see .env.example).
+
+services:
+  app:
+    build: ./app
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      DB_HOST: db
+      DB_NAME: reservas
+      DB_USER: reservas
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-reservas-api}
+      ATTACHMENTS_DIR: /data/attachments
+    volumes:
+      - attachments:/data/attachments
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  auth:
+    build: ./auth
+    ports:
+      - "127.0.0.1:4000:4000"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-reservas-api}
+      TOKEN_TTL_SECONDS: ${TOKEN_TTL_SECONDS:-3600}
+    restart: unless-stopped
+
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_DATABASE: reservas
+      MARIADB_USER: reservas
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  attachments:

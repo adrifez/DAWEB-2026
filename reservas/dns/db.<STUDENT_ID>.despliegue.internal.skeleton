@@ -1,0 +1,21 @@
+; Forward zone skeleton for <STUDENT_ID>.despliegue.internal — Unit 1 DNS lab.
+; Replace EVERY occurrence of <STUDENT_ID> with your DNS-safe student id,
+; then copy to /etc/bind/ (e.g. db.<STUDENT_ID>.despliegue.internal).
+; ADD the A/CNAME records the lab asks for. Serial scheme: YYYYMMDDnn.
+;
+$TTL    86400
+@       IN      SOA     ns1.<STUDENT_ID>.despliegue.internal. admin.<STUDENT_ID>.despliegue.internal. (
+                        2026101901 ; serial
+                        3600       ; refresh
+                        900        ; retry
+                        604800     ; expire
+                        86400 )    ; minimum
+;
+@       IN      NS      ns1.<STUDENT_ID>.despliegue.internal.
+ns1     IN      A       192.168.56.10
+;
+; Add below (examples — use your real id in CNAMEs):
+; despliegue IN  A       192.168.56.10
+; reservas  IN  A       192.168.56.10
+; auth      IN  CNAME   despliegue.<STUDENT_ID>.despliegue.internal.
+; … and the matching reverse PTR in db.192.168.56

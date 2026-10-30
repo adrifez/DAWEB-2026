@@ -1,0 +1,54 @@
+# Draft OpenAPI for Reservas. Complete the remaining fields in Unit 5 (lab u05-01).
+# Replace alumno01 with your STUDENT_ID in servers.url when you document your deploy.
+
+openapi: 3.0.3
+info:
+  title: Reservas API
+  version: 0.1.0
+  description: Booking board for the DAW deployment lab (per-student zone under despliegue.internal).
+servers:
+  - url: http://reservas.alumno01.despliegue.internal
+    description: Lab example (HTTP until Unit 2); use your STUDENT_ID
+paths:
+  /:
+    get:
+      summary: HTML booking list
+      responses:
+        "200":
+          description: HTML page with the current bookings
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Service is up
+  /bookings:
+    post:
+      summary: Create a booking
+      security:
+        - bearerAuth: []
+      # TODO (Unit 5): requestBody (guest_name, slot_at, notes) and responses 201 / 400 / 401
+      responses:
+        "201":
+          description: Booking created
+  /bookings/{id}/cancel:
+    post:
+      summary: Cancel a booking
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      # TODO (Unit 5): responses 200 / 401 / 404
+      responses:
+        "200":
+          description: Booking cancelled
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
